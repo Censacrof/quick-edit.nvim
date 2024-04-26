@@ -1,7 +1,11 @@
 local augroup = vim.api.nvim_create_augroup("quick-edit", { clear = true })
 
 local function quick_edit_open()
-	print("Hello World")
+	local buf = vim.api.nvim_create_buf(true, false)
+	vim.api.nvim_buf_set_name(buf, "*quick-edit*")
+	vim.api.nvim_set_option_value("buftype", "nofile", {})
+
+	vim.api.nvim_win_set_buf(0, buf)
 end
 
 local function main()
