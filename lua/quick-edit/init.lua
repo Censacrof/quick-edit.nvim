@@ -23,6 +23,7 @@ local function open_quick_edit_window()
 	local win_list = vim.fn.win_findbuf(buf)
 
 	if #win_list > 0 then
+		vim.api.nvim_set_current_win(win_list[1])
 		return
 	end
 
@@ -38,7 +39,6 @@ local function init_quick_edit_with_quickfix()
 	local qf_list = vim.fn.getqflist()
 	local lines = {}
 
-	-- Print each entry in the quickfix list
 	local last_filename = nil
 	for idx, entry in ipairs(qf_list) do
 		-- bufnr = 10,
@@ -55,12 +55,11 @@ local function init_quick_edit_with_quickfix()
 		-- vcol = 0
 		local filename = vim.api.nvim_buf_get_name(entry.bufnr)
 		if (filename ~= last_filename) then
-			lines[#lines+1] = ""
-			lines[#lines+1] = string.format("@%s", filename)
+			lines[#lines + 1] = ""
+			lines[#lines + 1] = string.format("@%d|%s", idx, filename)
 		end
 
-		lines[#lines + 1] = string.format("#%d|%d:%d|%s", idx, entry.lnum, entry.col, entry
-		.text)
+		lines[#lines + 1] = string.format("#%d|%d:%d|%s", idx, entry.lnum, entry.col, entry.text)
 
 		last_filename = filename
 	end
